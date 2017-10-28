@@ -5,11 +5,24 @@ using UnityEngine.AI;
 
 public class PathFinder : MonoBehaviour
 {
+    /// <summary>
+    /// Currently available fuel
+    /// </summary>
+    public float Fuel = 100.0F;
 
+    /// <summary>
+    /// Transform of destination object
+    /// </summary>
     public Transform destinationTransform = null;
-    public Vector3? destinationPosition = null;
+
+    /// <summary>
+    /// Capacity of fire fighers for fire truck
+    /// </summary>
+    public int fireFighterCapacity = 4;
+
     private Building buildingOnFire = null;
     private NavMeshAgent navMeshAgent = null;
+    private float totalFuelTime = 0;
 
     // Use this for initialization
     void Start()
@@ -21,7 +34,8 @@ public class PathFinder : MonoBehaviour
     void Update()
     {
         ProcessInput();
-        UpdateFireEngine();        
+        UpdateFireEngine();
+        UpdateFuel();
     }
 
     /// <summary>
@@ -50,7 +64,7 @@ public class PathFinder : MonoBehaviour
     {
         if (destinationTransform != null)
         {
-            if (navMeshAgent != null && navMeshAgent.remainingDistance == 0)
+            if (navMeshAgent != null && navMeshAgent.remainingDistance == 0 && Vector3.Distance(buildingOnFire.transform.position, transform.position) < 15)
             {
                 buildingOnFire.IsOnFire = false;
             }
@@ -58,10 +72,14 @@ public class PathFinder : MonoBehaviour
             navMeshAgent = transform.GetComponent<NavMeshAgent>();
             navMeshAgent.destination = destinationTransform.position;
         }
-        else if (destinationPosition != null)
-        {
-            transform.GetComponent<NavMeshAgent>().destination = destinationPosition.Value;
-        }
+    }
+
+    /// <summary>
+    /// Reduce fuel for units travelled.
+    /// </summary>
+    /// <param name="deltaTime"></param>
+    private void UpdateFuel()
+    {
     }
 
 
