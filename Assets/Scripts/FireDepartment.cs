@@ -27,7 +27,7 @@ public class FireDepartment : MonoBehaviour
     {
         //If your mouse hovers over the GameObject with the script attached, output this message
         buildingRenderer.material.color = Color.green;
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             canvas.gameObject.SetActive(true);
         }

@@ -133,7 +133,7 @@ public class FireEngine : MonoBehaviour
         if (totalFuelTime > 2f)
         {
             totalFuelTime = 0f;
-            Fuel -= 10f;
+            Fuel -= 1f;
         }
     }
 
