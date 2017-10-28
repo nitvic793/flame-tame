@@ -64,7 +64,7 @@ public class FireEngine : MonoBehaviour
                 }
             }
         }
-        if (Input.GetMouseButton(0) && isSelected) //if left click
+        else if (Input.GetMouseButton(0) && isSelected) //if left click
         {
             RaycastHit hit;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -77,11 +77,13 @@ public class FireEngine : MonoBehaviour
                 {
                     isGoingBackToHQ = false;
                     destinationTransform = null;
+                    isSelected = false;
                 }
                 else if (buildingOnFire != null && buildingOnFire.IsOnFire)
                 {
                     destinationTransform = hit.transform;
                     isGoingBackToHQ = false;
+                    isSelected = false;
                 }
             }
         }
@@ -151,6 +153,22 @@ public class FireEngine : MonoBehaviour
             if (!fireEngine.gameObject.Equals(gameObject))
             {
                 fireEngine.isSelected = false;
+            }
+        }
+    }
+
+    void OnGUI()
+    {
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, transform.position);
+        if (isSelected)
+        {
+            if (GUI.Button(new Rect(screenPoint.x, Screen.height - screenPoint.y, 50, 30), new GUIContent("Refuel")))
+            {
+                //code here
+                Debug.Log("Test");
+                isSelected = false;
+                isGoingBackToHQ = true;
+                destinationTransform = null;
             }
         }
     }
