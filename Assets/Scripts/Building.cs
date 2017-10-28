@@ -6,7 +6,7 @@ public class Building : MonoBehaviour
 {
 
     
-    public int fireIntensity = 0;
+    //public int fireIntensity = 0;
     private Renderer buildingRenderer = null;
     private Color defaultColor;
 
@@ -16,11 +16,15 @@ public class Building : MonoBehaviour
     public int buildingHealth = 100;
     public bool IsOnFire = false;
     public bool burntDown = false;
+    public bool fireBeingPutOut = false;
     public int peopleCapacity;
     public int priority;
+    public float fireHitRate = 20.0f;
+    public float waterHitRate = 1.0f;
+    public int water = 10;
     public Building next;
 
-
+    private float timer = 0.0f;
     // Use this for initialization
     void Start()
     {
@@ -35,6 +39,21 @@ public class Building : MonoBehaviour
         if (IsOnFire)
         {
             buildingRenderer.material.color = Color.red;
+            timer += Time.deltaTime;
+            if (timer >= fireHitRate)
+            {
+                Burning(fireIntensityLevel);
+                timer = 0.0f;
+            }
+            timer += Time.deltaTime;
+            if (fireBeingPutOut)
+            {
+                if (timer >= waterHitRate)
+                {
+                    PutOutFire(water);
+                    timer = 0.0f;
+                }
+            }
         }
         else
         {
@@ -42,22 +61,20 @@ public class Building : MonoBehaviour
         }
     }
 
-    void Burning()
+    public void Burning(int fireIntensity)
     {
-        if (!IsOnFire)
-        {
+        fireIntensityLevel = fireIntensity;
             IsOnFire = true;
             buildingHealth -= fireIntensityLevel;
-
             if(buildingHealth <= 0)
             {
                 IsOnFire = false;
                 burntDown = true;
+                Destroy(this.gameObject);
             }
-        }
     }
 
-    void PutOutFire(int waterPressure)
+    public void PutOutFire(int waterPressure)
     {
         if (IsOnFire && !burntDown)
         {
@@ -72,5 +89,10 @@ public class Building : MonoBehaviour
     public Vector3 GetPosition()
     {
         return transform.position;
+    }
+
+    public GameObject GetObject()
+    {
+        return this.gameObject;
     }
 }
