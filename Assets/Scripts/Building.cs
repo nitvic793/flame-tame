@@ -5,7 +5,7 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
 
-    
+
     //public int fireIntensity = 0;
     private Renderer buildingRenderer = null;
     private Color defaultColor;
@@ -28,7 +28,7 @@ public class Building : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        
+
         buildingRenderer = gameObject.GetComponent<Renderer>();
         defaultColor = buildingRenderer.material.color;
     }
@@ -64,14 +64,14 @@ public class Building : MonoBehaviour
     public void Burning(int fireIntensity)
     {
         fireIntensityLevel = fireIntensity;
-            IsOnFire = true;
-            buildingHealth -= fireIntensityLevel;
-            if(buildingHealth <= 0)
-            {
-                IsOnFire = false;
-                burntDown = true;
-                Destroy(this.gameObject);
-            }
+        IsOnFire = true;
+        buildingHealth -= fireIntensityLevel;
+        if (buildingHealth <= 0)
+        {
+            IsOnFire = false;
+            burntDown = true;
+            Destroy(this.gameObject);
+        }
     }
 
     public void PutOutFire(int waterPressure)
@@ -79,9 +79,10 @@ public class Building : MonoBehaviour
         if (IsOnFire && !burntDown)
         {
             fireIntensityLevel -= waterPressure;
-            if(fireIntensityLevel <= 0)
+            if (fireIntensityLevel <= 0 && IsOnFire)
             {
                 IsOnFire = false;
+
                 Destroy(this.gameObject.transform.GetChild(0).gameObject);
                 buildingHealth = 100;
             }
