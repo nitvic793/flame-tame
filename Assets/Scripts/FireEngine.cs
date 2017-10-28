@@ -42,7 +42,6 @@ public class FireEngine : MonoBehaviour
     {
         ProcessInput();
         UpdateFireEngine();
-        UpdateFuel();
     }
 
     /// <summary>
@@ -60,11 +59,12 @@ public class FireEngine : MonoBehaviour
                 if (gameObject.Equals(hit.transform.gameObject))
                 {
                     isSelected = true;
+                    DeselectOtherEngines();
                     Debug.Log("Selected");
                 }
             }
         }
-        if (Input.GetMouseButton(0) && isSelected) //if left click
+        else if (Input.GetMouseButton(0) && isSelected) //if left click
         {
             RaycastHit hit;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -75,12 +75,16 @@ public class FireEngine : MonoBehaviour
                 var hq = hit.transform.gameObject.GetComponent<FireDepartment>();
                 if (hq != null)
                 {
-                    isGoingBackToHQ = true;
+                    isGoingBackToHQ = false;
                     destinationTransform = null;
-                    return;
+                    isSelected = false;
                 }
-                if (buildingOnFire != null && buildingOnFire.IsOnFire)
+                else if (buildingOnFire != null && buildingOnFire.IsOnFire)
+                {
                     destinationTransform = hit.transform;
+                    isGoingBackToHQ = false;
+                    isSelected = false;
+                }
             }
         }
     }
@@ -97,17 +101,33 @@ public class FireEngine : MonoBehaviour
             if(Vector3.Distance(fireHQTransform.position, transform.position) < 5)
             {
                 isGoingBackToHQ = false;
+                Destroy(this.gameObject);
+                Player.fireTrucksAvailable += 1;
+                Fuel = 100f;
+                if (FireDepartment.allTrucksDeployed)
+                {
+                    FireDepartment.allTrucksDeployed = false;
+                }
             }
         }
-        else if (destinationTransform != null && buildingOnFire != null)
+        else if (destinationTransform != null && buildingOnFire != null && buildingOnFire.IsOnFire && Fuel>0)
         {
             if (navMeshAgent != null && navMeshAgent.remainingDistance == 0 && Vector3.Distance(buildingOnFire.transform.position, transform.position) < 10)
             {
-                buildingOnFire.IsOnFire = false;
+                buildingOnFire.fireBeingPutOut = true;
+            }
+            else
+            {
+                UpdateFuel(Time.deltaTime);
             }
 
             navMeshAgent = transform.GetComponent<NavMeshAgent>();
             navMeshAgent.destination = destinationTransform.position;
+        }
+        else
+        {
+            buildingOnFire = null;
+            destinationTransform = null;
         }
     }
 
@@ -115,8 +135,42 @@ public class FireEngine : MonoBehaviour
     /// Reduce fuel for units travelled.
     /// </summary>
     /// <param name="deltaTime"></param>
-    private void UpdateFuel()
+    private void UpdateFuel(float deltaTime)
     {
+        totalFuelTime += deltaTime;
+        if (totalFuelTime > 2f)
+        {
+            totalFuelTime = 0f;
+            Fuel -= 1f;
+        }
+    }
+
+    private void DeselectOtherEngines()
+    {
+        var fireEngines = FindObjectsOfType<FireEngine>();
+        foreach(var fireEngine in fireEngines)
+        {
+            if (!fireEngine.gameObject.Equals(gameObject))
+            {
+                fireEngine.isSelected = false;
+            }
+        }
+    }
+
+    void OnGUI()
+    {
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, transform.position);
+        if (isSelected)
+        {
+            if (GUI.Button(new Rect(screenPoint.x, Screen.height - screenPoint.y, 50, 30), new GUIContent("Refuel")))
+            {
+                //code here
+                Debug.Log("Test");
+                isSelected = false;
+                isGoingBackToHQ = true;
+                destinationTransform = null;
+            }
+        }
     }
 
 
