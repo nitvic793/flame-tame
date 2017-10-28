@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FireTruckHandler : MonoBehaviour {
 
+    public Transform fireDepartment = null;
     public GameObject fireTruckPrefab = null;
     public Transform startPositionTransform = null;
 
@@ -18,6 +19,7 @@ public class FireTruckHandler : MonoBehaviour {
 
     public void DeployFireTruck()
     {
-        Instantiate(fireTruckPrefab, startPositionTransform.position, Quaternion.Euler(new Vector3()));
+        var fireTruck = Instantiate(fireTruckPrefab, startPositionTransform.position, Quaternion.Euler(new Vector3()));
+        fireTruck.GetComponent<FireEngine>().fireHQTransform = fireDepartment;
     }
 }

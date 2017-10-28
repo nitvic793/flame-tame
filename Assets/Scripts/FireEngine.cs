@@ -42,7 +42,6 @@ public class FireEngine : MonoBehaviour
     {
         ProcessInput();
         UpdateFireEngine();
-        UpdateFuel();
     }
 
     /// <summary>
@@ -100,13 +99,18 @@ public class FireEngine : MonoBehaviour
             if(Vector3.Distance(fireHQTransform.position, transform.position) < 5)
             {
                 isGoingBackToHQ = false;
+                Fuel = 100f;
             }
         }
-        else if (destinationTransform != null && buildingOnFire != null && buildingOnFire.IsOnFire)
+        else if (destinationTransform != null && buildingOnFire != null && buildingOnFire.IsOnFire && Fuel>0)
         {
             if (navMeshAgent != null && navMeshAgent.remainingDistance == 0 && Vector3.Distance(buildingOnFire.transform.position, transform.position) < 10)
             {
                 buildingOnFire.fireBeingPutOut = true;
+            }
+            else
+            {
+                UpdateFuel(Time.deltaTime);
             }
 
             navMeshAgent = transform.GetComponent<NavMeshAgent>();
@@ -123,8 +127,14 @@ public class FireEngine : MonoBehaviour
     /// Reduce fuel for units travelled.
     /// </summary>
     /// <param name="deltaTime"></param>
-    private void UpdateFuel()
+    private void UpdateFuel(float deltaTime)
     {
+        totalFuelTime += deltaTime;
+        if (totalFuelTime > 2f)
+        {
+            totalFuelTime = 0f;
+            Fuel -= 10f;
+        }
     }
 
     private void DeselectOtherEngines()
