@@ -82,6 +82,8 @@ public class Building : MonoBehaviour
             if(fireIntensityLevel <= 0)
             {
                 IsOnFire = false;
+                Destroy(this.gameObject.transform.GetChild(0).gameObject);
+                buildingHealth = 100;
             }
         }
     }
