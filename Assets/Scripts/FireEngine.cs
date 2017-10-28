@@ -102,15 +102,20 @@ public class FireEngine : MonoBehaviour
                 isGoingBackToHQ = false;
             }
         }
-        else if (destinationTransform != null && buildingOnFire != null)
+        else if (destinationTransform != null && buildingOnFire != null && buildingOnFire.IsOnFire)
         {
             if (navMeshAgent != null && navMeshAgent.remainingDistance == 0 && Vector3.Distance(buildingOnFire.transform.position, transform.position) < 10)
             {
-                buildingOnFire.IsOnFire = false;
+                buildingOnFire.fireBeingPutOut = true;
             }
 
             navMeshAgent = transform.GetComponent<NavMeshAgent>();
             navMeshAgent.destination = destinationTransform.position;
+        }
+        else
+        {
+            buildingOnFire = null;
+            destinationTransform = null;
         }
     }
 
