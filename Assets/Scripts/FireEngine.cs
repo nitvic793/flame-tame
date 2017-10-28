@@ -60,6 +60,7 @@ public class FireEngine : MonoBehaviour
                 if (gameObject.Equals(hit.transform.gameObject))
                 {
                     isSelected = true;
+                    DeselectOtherEngines();
                     Debug.Log("Selected");
                 }
             }
@@ -77,10 +78,12 @@ public class FireEngine : MonoBehaviour
                 {
                     isGoingBackToHQ = true;
                     destinationTransform = null;
-                    return;
                 }
-                if (buildingOnFire != null && buildingOnFire.IsOnFire)
+                else if (buildingOnFire != null && buildingOnFire.IsOnFire)
+                {
                     destinationTransform = hit.transform;
+                    isGoingBackToHQ = false;
+                }
             }
         }
     }
@@ -117,6 +120,18 @@ public class FireEngine : MonoBehaviour
     /// <param name="deltaTime"></param>
     private void UpdateFuel()
     {
+    }
+
+    private void DeselectOtherEngines()
+    {
+        var fireEngines = FindObjectsOfType<FireEngine>();
+        foreach(var fireEngine in fireEngines)
+        {
+            if (!fireEngine.gameObject.Equals(gameObject))
+            {
+                fireEngine.isSelected = false;
+            }
+        }
     }
 
 
