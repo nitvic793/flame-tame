@@ -5,11 +5,21 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
 
-    public bool IsOnFire = false;
-    public int health = 100;
+    
     public int fireIntensity = 0;
     private Renderer buildingRenderer = null;
     private Color defaultColor;
+
+    public int id;
+    public int fireStartTime;       //In seconds
+    public int fireIntensityLevel;
+    public int buildingHealth = 100;
+    public bool IsOnFire = false;
+    public bool burntDown = false;
+    public int peopleCapacity;
+    public int priority;
+    public Building next;
+
 
     // Use this for initialization
     void Start()
@@ -32,4 +42,35 @@ public class Building : MonoBehaviour
         }
     }
 
+    void Burning()
+    {
+        if (!IsOnFire)
+        {
+            IsOnFire = true;
+            buildingHealth -= fireIntensityLevel;
+
+            if(buildingHealth <= 0)
+            {
+                IsOnFire = false;
+                burntDown = true;
+            }
+        }
+    }
+
+    void PutOutFire(int waterPressure)
+    {
+        if (IsOnFire && !burntDown)
+        {
+            fireIntensityLevel -= waterPressure;
+            if(fireIntensityLevel <= 0)
+            {
+                IsOnFire = false;
+            }
+        }
+    }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
 }

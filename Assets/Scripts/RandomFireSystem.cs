@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RandomFireSystem : MonoBehaviour
 {
-
+    public GameObject FirePrefab = null;
     private List<Building> buildings = new List<Building>();
     float totalTime = 0.0F;
     int nextRandomFire;
@@ -24,6 +24,8 @@ public class RandomFireSystem : MonoBehaviour
 
     private void RandomFireLoop(float deltaTime)
     {
+        Vector3 firePosition;
+        GameObject curretFire;
         totalTime += deltaTime;
         if (totalTime > nextRandomFire)
         {
@@ -31,6 +33,8 @@ public class RandomFireSystem : MonoBehaviour
             totalTime = 0;
             int buildingToSetFire = Random.Range(0, buildings.Count);
             buildings[buildingToSetFire].IsOnFire = true;
+            firePosition = buildings[buildingToSetFire].GetPosition();
+            Instantiate(FirePrefab, firePosition, Quaternion.Euler(-90,-90,-90));
         }
     }
 
