@@ -98,7 +98,7 @@ public class FireEngine : MonoBehaviour
         {
             navMeshAgent = transform.GetComponent<NavMeshAgent>();
             navMeshAgent.destination = fireHQTransform.position;
-            if(Vector3.Distance(fireHQTransform.position, transform.position) < 5)
+            if(Vector3.Distance(fireHQTransform.position, transform.position) < 8)
             {
                 isGoingBackToHQ = false;
                 Destroy(this.gameObject);

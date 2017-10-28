@@ -17,7 +17,7 @@ public class FireDepartment : MonoBehaviour
     {
         buildingRenderer = GetComponent<Renderer>();
         defaultColor = buildingRenderer.material.color;
-        canvas.gameObject.SetActive(canvasVisible);
+        //canvas.gameObject.SetActive(canvasVisible);
     }
 
     // Update is called once per frame
@@ -47,11 +47,15 @@ public class FireDepartment : MonoBehaviour
                 DeployFireTruck();
                 clickedDept = false;
             }
-            if(GUI.Button(new Rect(V.x + 100, Screen.height - V.y, 100, 30), "Close"))
+            if(GUI.Button(new Rect(V.x + 100, Screen.height - V.y, 100, 30), "Buy(Cost:2000)"))
             {
                 clickedDept = false;
             }
-            
+            if (GUI.Button(new Rect(V.x + 200, Screen.height - V.y, 30, 30), "X"))
+            {
+                clickedDept = false;
+            }
+
         }
         else if (clickedDept && allTrucksDeployed)
         {
