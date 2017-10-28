@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PathFinder : MonoBehaviour
+public class FireEngine : MonoBehaviour
 {
     /// <summary>
     /// Currently available fuel
@@ -15,14 +15,21 @@ public class PathFinder : MonoBehaviour
     /// </summary>
     public Transform destinationTransform = null;
 
+    public Transform fireHQTransform = null;
+
     /// <summary>
     /// Capacity of fire fighers for fire truck
     /// </summary>
     public int fireFighterCapacity = 4;
 
+    public bool isGoingBackToHQ = false;
+
+    public bool isSelected = false;
+
     private Building buildingOnFire = null;
     private NavMeshAgent navMeshAgent = null;
     private float totalFuelTime = 0;
+   
 
     // Use this for initialization
     void Start()
@@ -43,7 +50,21 @@ public class PathFinder : MonoBehaviour
     /// </summary>
     private void ProcessInput()
     {
-        if (Input.GetMouseButton(0)) //if left click
+        if (!isSelected && Input.GetMouseButton(0))
+        {
+            RaycastHit hit;
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Physics.Raycast(ray, out hit);
+            if (hit.transform != null)
+            {
+                if (gameObject.Equals(hit.transform.gameObject))
+                {
+                    isSelected = true;
+                    Debug.Log("Selected");
+                }
+            }
+        }
+        if (Input.GetMouseButton(0) && isSelected) //if left click
         {
             RaycastHit hit;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -51,6 +72,13 @@ public class PathFinder : MonoBehaviour
             if (hit.transform != null)
             {
                 buildingOnFire = hit.transform.gameObject.GetComponent<Building>();
+                var hq = hit.transform.gameObject.GetComponent<FireDepartment>();
+                if (hq != null)
+                {
+                    isGoingBackToHQ = true;
+                    destinationTransform = null;
+                    return;
+                }
                 if (buildingOnFire != null && buildingOnFire.IsOnFire)
                     destinationTransform = hit.transform;
             }
@@ -62,9 +90,18 @@ public class PathFinder : MonoBehaviour
     /// </summary>
     private void UpdateFireEngine()
     {
-        if (destinationTransform != null)
+        if (isGoingBackToHQ)
         {
-            if (navMeshAgent != null && navMeshAgent.remainingDistance == 0 && Vector3.Distance(buildingOnFire.transform.position, transform.position) < 15)
+            navMeshAgent = transform.GetComponent<NavMeshAgent>();
+            navMeshAgent.destination = fireHQTransform.position;
+            if(Vector3.Distance(fireHQTransform.position, transform.position) < 5)
+            {
+                isGoingBackToHQ = false;
+            }
+        }
+        else if (destinationTransform != null && buildingOnFire != null)
+        {
+            if (navMeshAgent != null && navMeshAgent.remainingDistance == 0 && Vector3.Distance(buildingOnFire.transform.position, transform.position) < 10)
             {
                 buildingOnFire.IsOnFire = false;
             }
