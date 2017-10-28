@@ -75,7 +75,7 @@ public class FireEngine : MonoBehaviour
                 var hq = hit.transform.gameObject.GetComponent<FireDepartment>();
                 if (hq != null)
                 {
-                    isGoingBackToHQ = true;
+                    isGoingBackToHQ = false;
                     destinationTransform = null;
                 }
                 else if (buildingOnFire != null && buildingOnFire.IsOnFire)
@@ -99,7 +99,13 @@ public class FireEngine : MonoBehaviour
             if(Vector3.Distance(fireHQTransform.position, transform.position) < 5)
             {
                 isGoingBackToHQ = false;
+                Destroy(this.gameObject);
+                Player.fireTrucksAvailable += 1;
                 Fuel = 100f;
+                if (FireDepartment.allTrucksDeployed)
+                {
+                    FireDepartment.allTrucksDeployed = false;
+                }
             }
         }
         else if (destinationTransform != null && buildingOnFire != null && buildingOnFire.IsOnFire && Fuel>0)

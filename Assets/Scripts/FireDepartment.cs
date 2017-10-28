@@ -9,6 +9,8 @@ public class FireDepartment : MonoBehaviour
     private Color defaultColor;
     public Canvas canvas;
     private bool canvasVisible = false;
+    private bool clickedDept = false;
+    public static bool allTrucksDeployed = false;
 
     // Use this for initialization
     void Start()
@@ -21,6 +23,7 @@ public class FireDepartment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("trucks " + allTrucksDeployed);
     }
 
     void OnMouseOver()
@@ -29,8 +32,37 @@ public class FireDepartment : MonoBehaviour
         buildingRenderer.material.color = Color.green;
         if (Input.GetMouseButton(0))
         {
-            canvas.gameObject.SetActive(true);
+            clickedDept = true;
+            //canvas.gameObject.SetActive(true);
         }
+    }
+
+    private void OnGUI()
+    {
+        if (clickedDept && !allTrucksDeployed)
+        {
+            Vector3 V = Camera.main.WorldToScreenPoint(this.transform.position);
+            if(GUI.Button(new Rect(V.x, Screen.height - V.y, 100, 30), "Deploy"))
+            {
+                DeployFireTruck();
+                clickedDept = false;
+            }
+            if(GUI.Button(new Rect(V.x + 100, Screen.height - V.y, 100, 30), "Close"))
+            {
+                clickedDept = false;
+            }
+            
+        }
+        else if (clickedDept && allTrucksDeployed)
+        {
+            Vector3 V = Camera.main.WorldToScreenPoint(this.transform.position);
+            if(GUI.Button(new Rect(V.x, Screen.height - V.y, 200, 50), "All trucks are deployed"))
+            {
+                clickedDept = false;
+            }
+        }
+
+
     }
 
     void OnMouseExit()
@@ -41,9 +73,19 @@ public class FireDepartment : MonoBehaviour
 
     public void DeployFireTruck()
     {
+        Debug.Log(Player.fireTrucksAvailable);
         var fireTruckGameObject = GameObject.Find("FireTruckHandler");
         var fireTruckHandler = fireTruckGameObject.GetComponent<FireTruckHandler>();
-        fireTruckHandler.DeployFireTruck();
+        if (Player.fireTrucksAvailable >= 1)
+        {
+            Debug.Log("inside " + Player.fireTrucksAvailable);
+            fireTruckHandler.DeployFireTruck();
+        }
+        else if (Player.fireTrucksAvailable <= 0)
+        {
+            //display no more trucks available
+            allTrucksDeployed = true;
+        }
     }
 
     public void RemoveCanvas()

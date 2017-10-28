@@ -21,5 +21,10 @@ public class FireTruckHandler : MonoBehaviour {
     {
         var fireTruck = Instantiate(fireTruckPrefab, startPositionTransform.position, Quaternion.Euler(new Vector3()));
         fireTruck.GetComponent<FireEngine>().fireHQTransform = fireDepartment;
+        Player.fireTrucksAvailable -= 1;
+        if(Player.fireTrucksAvailable <= 0)
+        {
+            FireDepartment.allTrucksDeployed = true;
+        }
     }
 }

@@ -5,8 +5,8 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
 
+    public GlobalComponents globalComponent = new GlobalComponents();
     
-    //public int fireIntensity = 0;
     private Renderer buildingRenderer = null;
     private Color defaultColor;
 
@@ -71,7 +71,8 @@ public class Building : MonoBehaviour
                 IsOnFire = false;
                 burntDown = true;
                 Destroy(this.gameObject);
-            }
+                Player.reward -= globalComponent.damagesPaid;
+        }
     }
 
     public void PutOutFire(int waterPressure)
@@ -84,6 +85,7 @@ public class Building : MonoBehaviour
                 IsOnFire = false;
                 Destroy(this.gameObject.transform.GetChild(0).gameObject);
                 buildingHealth = 100;
+                Player.reward += globalComponent.reward;
             }
         }
     }
