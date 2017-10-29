@@ -29,12 +29,15 @@ public class FireEngine : MonoBehaviour
     private Building buildingOnFire = null;
     private NavMeshAgent navMeshAgent = null;
     private float totalFuelTime = 0;
-   
+
+    public GameObject positioning = null;
+
 
     // Use this for initialization
     void Start()
     {
-
+        navMeshAgent = transform.GetComponent<NavMeshAgent>();
+        positioning = Instantiate(GameObject.Find("PositioningObject"));
     }
 
     // Update is called once per frame
@@ -81,7 +84,7 @@ public class FireEngine : MonoBehaviour
                 if (buildingOnFire == null)
                 {
                     var plane = hit.transform;
-                    buildingOnFire = plane.parent.GetComponent<Building>();
+                    buildingOnFire = (plane.parent == null) ? null : plane.parent.GetComponent<Building>();
                 }
 
                 if (buildingOnFire != null && buildingOnFire.IsOnFire)
@@ -90,7 +93,17 @@ public class FireEngine : MonoBehaviour
                     isGoingBackToHQ = false;
                     isSelected = false;
                 }
+                else
+                {
+                    positioning.transform.position = hit.point;
+                    destinationTransform = positioning.transform;
+                }
             }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            isSelected = false;
         }
     }
 
@@ -101,9 +114,8 @@ public class FireEngine : MonoBehaviour
     {
         if (isGoingBackToHQ)
         {
-            navMeshAgent = transform.GetComponent<NavMeshAgent>();
             navMeshAgent.destination = fireHQTransform.position;
-            if(Vector3.Distance(fireHQTransform.position, transform.position) < 8)
+            if (Vector3.Distance(fireHQTransform.position, transform.position) < 8)
             {
                 isGoingBackToHQ = false;
                 Destroy(this.gameObject);
@@ -115,7 +127,7 @@ public class FireEngine : MonoBehaviour
                 }
             }
         }
-        else if (destinationTransform != null && buildingOnFire != null && buildingOnFire.IsOnFire && Fuel>0)
+        else if (destinationTransform != null && buildingOnFire != null && buildingOnFire.IsOnFire && Fuel > 0)
         {
             if (navMeshAgent != null && navMeshAgent.remainingDistance == 0 && Vector3.Distance(buildingOnFire.transform.position, transform.position) < 10)
             {
@@ -126,7 +138,10 @@ public class FireEngine : MonoBehaviour
                 UpdateFuel(Time.deltaTime);
             }
 
-            navMeshAgent = transform.GetComponent<NavMeshAgent>();
+            navMeshAgent.destination = destinationTransform.position;
+        }
+        else if (destinationTransform != null)
+        {
             navMeshAgent.destination = destinationTransform.position;
         }
         else
@@ -153,7 +168,7 @@ public class FireEngine : MonoBehaviour
     private void DeselectOtherEngines()
     {
         var fireEngines = FindObjectsOfType<FireEngine>();
-        foreach(var fireEngine in fireEngines)
+        foreach (var fireEngine in fireEngines)
         {
             if (!fireEngine.gameObject.Equals(gameObject))
             {
