@@ -78,14 +78,13 @@ public class FireEngine : MonoBehaviour
             if (hit.transform != null)
             {
                 buildingOnFire = hit.transform.gameObject.GetComponent<Building>();
-                var hq = hit.transform.gameObject.GetComponent<FireDepartment>();
-                if (hq != null)
+                if (buildingOnFire == null)
                 {
-                    isGoingBackToHQ = false;
-                    destinationTransform = null;
-                    isSelected = false;
+                    var plane = hit.transform;
+                    buildingOnFire = plane.parent.GetComponent<Building>();
                 }
-                else if (buildingOnFire != null && buildingOnFire.IsOnFire)
+
+                if (buildingOnFire != null && buildingOnFire.IsOnFire)
                 {
                     destinationTransform = hit.transform;
                     isGoingBackToHQ = false;
