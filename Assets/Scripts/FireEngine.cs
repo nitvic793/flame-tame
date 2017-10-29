@@ -140,9 +140,10 @@ public class FireEngine : MonoBehaviour
 
             navMeshAgent.destination = destinationTransform.position;
         }
-        else if (destinationTransform != null)
+        else if (destinationTransform != null & Fuel>0)
         {
             navMeshAgent.destination = destinationTransform.position;
+            UpdateFuel(Time.deltaTime);
         }
         else
         {
