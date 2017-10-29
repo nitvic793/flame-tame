@@ -74,6 +74,7 @@ public class Building : MonoBehaviour
             IsOnFire = false;
             burntDown = true;
             Destroy(this.gameObject);
+            GlobalComponents.burntBuildings += 1;
             currentBuildingPos.y = 0;
             Instantiate(burntBuilding, currentBuildingPos, Quaternion.identity);
             Player.reward -= GlobalComponents.damagesPaid;
