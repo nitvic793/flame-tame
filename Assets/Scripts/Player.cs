@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    public static int reward = 4000;
+    public static int reward = 500;
     public static int fireTrucksAvailable = 2;
     public static int fireTrucksOwned = 2;
    
