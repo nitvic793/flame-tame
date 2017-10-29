@@ -92,7 +92,11 @@ public class Building : MonoBehaviour
                 buildingHealth = 100;
                 Player.reward += GlobalComponents.reward;
                 buildingRenderer.material.color = defaultColor;
-                Destroy(this.gameObject.transform.GetChild(0).gameObject);
+                foreach(var child in buildingRenderer.GetComponentsInChildren<Renderer>())
+                {
+                    child.material.color = Color.white;
+                }
+                Destroy(this.gameObject.transform.GetChild(1).gameObject);
             }
         }
     }
