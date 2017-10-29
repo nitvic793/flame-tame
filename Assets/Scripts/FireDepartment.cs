@@ -37,8 +37,18 @@ public class FireDepartment : MonoBehaviour
         }
     }
 
+    private void DrawTitle()
+    {
+        Vector3 V = Camera.main.WorldToScreenPoint(this.transform.position);
+        GUIStyle style = new GUIStyle();
+        style.border.left = 0;
+        style.fontSize = 14;
+        GUI.TextArea(new Rect(V.x - 50, Screen.height - V.y - 50, 120, 30), "Fire HQ");
+    }
+
     private void OnGUI()
     {
+        DrawTitle();
         if (clickedDept && !allTrucksDeployed)
         {
             Vector3 V = Camera.main.WorldToScreenPoint(this.transform.position);
