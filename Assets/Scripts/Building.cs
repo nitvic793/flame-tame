@@ -9,6 +9,7 @@ public class Building : MonoBehaviour
     
     private Renderer buildingRenderer = null;
     private Color defaultColor;
+    public GameObject burntBuilding = null;
 
     public int id;
     public int fireStartTime;       //In seconds
@@ -64,15 +65,16 @@ public class Building : MonoBehaviour
 
     public void Burning(int fireIntensity)
     {
-        fireIntensityLevel = fireIntensity;
+            fireIntensityLevel = fireIntensity;
             IsOnFire = true;
             buildingHealth -= fireIntensityLevel;
+            Vector3 currentBuildingPos = this.gameObject.transform.position;
             if(buildingHealth <= 0)
             {
                 IsOnFire = false;
                 burntDown = true;
                 Destroy(this.gameObject);
-            
+                Instantiate(burntBuilding, currentBuildingPos, Quaternion.identity);
                 Player.reward -= GlobalComponents.damagesPaid;
                 if(Player.reward < 0)
                 {
