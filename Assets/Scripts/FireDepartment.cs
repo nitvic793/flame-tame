@@ -66,7 +66,22 @@ public class FireDepartment : MonoBehaviour
         else if (clickedDept && allTrucksDeployed)
         {
             Vector3 V = Camera.main.WorldToScreenPoint(this.transform.position);
-            if(GUI.Button(new Rect(V.x, Screen.height - V.y, 200, 50), "All trucks are deployed"))
+            if(GUI.Button(new Rect(V.x, (Screen.height - V.y) - 60, 200, 50), "All trucks are deployed"))
+            {
+                clickedDept = false;
+            }
+            if (GUI.Button(new Rect(V.x , Screen.height - V.y, 120, 30), "Buy (Cost:2000)"))
+            {
+                if (Player.reward >= 2000)
+                {
+                    Player.reward -= 2000;
+                    Player.fireTrucksAvailable += 1;
+                    Player.fireTrucksOwned += 1;
+                    allTrucksDeployed = false;
+                }
+                clickedDept = false;
+            }
+            if (GUI.Button(new Rect(V.x + 130, Screen.height - V.y, 30, 30), "X"))
             {
                 clickedDept = false;
             }
