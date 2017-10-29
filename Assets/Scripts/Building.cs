@@ -5,7 +5,7 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
 
-    public GlobalComponents globalComponent = new GlobalComponents();
+    //public GlobalComponents globalComponent = new GlobalComponents();
     
     private Renderer buildingRenderer = null;
     private Color defaultColor;
@@ -19,7 +19,7 @@ public class Building : MonoBehaviour
     public bool fireBeingPutOut = false;
     public int peopleCapacity;
     public int priority;
-    public float fireHitRate = 20.0f;
+    public float fireHitRate = 1.0f;
     public float waterHitRate = 1.0f;
     public int water = 10;
     public Building next;
@@ -50,6 +50,7 @@ public class Building : MonoBehaviour
             {
                 if (timer >= waterHitRate)
                 {
+                    Debug.Log("call");
                     PutOutFire(water);
                     timer = 0.0f;
                 }
@@ -57,7 +58,7 @@ public class Building : MonoBehaviour
         }
         else
         {
-            buildingRenderer.material.color = defaultColor;
+            //buildingRenderer.material.color = defaultColor;
         }
     }
 
@@ -71,7 +72,12 @@ public class Building : MonoBehaviour
                 IsOnFire = false;
                 burntDown = true;
                 Destroy(this.gameObject);
-                Player.reward -= globalComponent.damagesPaid;
+            
+                Player.reward -= GlobalComponents.damagesPaid;
+                if(Player.reward < 0)
+                {
+                    Player.reward = 0;
+                }
         }
     }
 
@@ -83,10 +89,10 @@ public class Building : MonoBehaviour
             if (fireIntensityLevel <= 0 && IsOnFire)
             {
                 IsOnFire = false;
-
-                Destroy(this.gameObject.transform.GetChild(0).gameObject);
                 buildingHealth = 100;
-                Player.reward += globalComponent.reward;
+                Player.reward += GlobalComponents.reward;
+                buildingRenderer.material.color = defaultColor;
+                Destroy(this.gameObject.transform.GetChild(0).gameObject);
             }
         }
     }

@@ -56,7 +56,13 @@ public class FireEngine : MonoBehaviour
             Physics.Raycast(ray, out hit);
             if (hit.transform != null)
             {
-                if (gameObject.Equals(hit.transform.gameObject))
+                bool hasObject = false;
+                if (hit.transform.parent != null)
+                {
+                    hasObject = hit.transform.parent.Equals(gameObject.transform);
+                }
+
+                if (gameObject.Equals(hit.transform.gameObject) || hasObject)
                 {
                     isSelected = true;
                     DeselectOtherEngines();

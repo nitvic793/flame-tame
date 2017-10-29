@@ -42,16 +42,22 @@ public class FireDepartment : MonoBehaviour
         if (clickedDept && !allTrucksDeployed)
         {
             Vector3 V = Camera.main.WorldToScreenPoint(this.transform.position);
-            if(GUI.Button(new Rect(V.x, Screen.height - V.y, 100, 30), "Deploy"))
+            if(GUI.Button(new Rect(V.x, Screen.height - V.y, 120, 30), "Deploy (" + Player.fireTrucksAvailable.ToString() + ")"))
             {
                 DeployFireTruck();
                 clickedDept = false;
             }
-            if(GUI.Button(new Rect(V.x + 100, Screen.height - V.y, 100, 30), "Buy(Cost:2000)"))
+            if(GUI.Button(new Rect(V.x + 125, Screen.height - V.y, 120, 30), "Buy (Cost:2000)"))
             {
+                if(Player.reward >= 2000)
+                {
+                    Player.reward -= 2000;
+                    Player.fireTrucksAvailable += 1;
+                    Player.fireTrucksOwned += 1;
+                }
                 clickedDept = false;
             }
-            if (GUI.Button(new Rect(V.x + 200, Screen.height - V.y, 30, 30), "X"))
+            if (GUI.Button(new Rect(V.x + 250, Screen.height - V.y, 30, 30), "X"))
             {
                 clickedDept = false;
             }
