@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    public static int reward = 0;
+    public static int reward = 4000;
     public static int fireTrucksAvailable = 2;
+    public static int fireTrucksOwned = 2;
+   
 	// Use this for initialization
 	void Start () {
 		
