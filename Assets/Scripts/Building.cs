@@ -6,7 +6,7 @@ public class Building : MonoBehaviour
 {
 
     //public GlobalComponents globalComponent = new GlobalComponents();
-    
+
     private Renderer buildingRenderer = null;
     private Color defaultColor;
     public GameObject burntBuilding = null;
@@ -65,21 +65,22 @@ public class Building : MonoBehaviour
 
     public void Burning(int fireIntensity)
     {
-            fireIntensityLevel = fireIntensity;
-            IsOnFire = true;
-            buildingHealth -= fireIntensityLevel;
-            Vector3 currentBuildingPos = this.gameObject.transform.position;
-            if(buildingHealth <= 0)
+        fireIntensityLevel = fireIntensity;
+        IsOnFire = true;
+        buildingHealth -= fireIntensityLevel;
+        Vector3 currentBuildingPos = this.gameObject.transform.position;
+        if (buildingHealth <= 0)
+        {
+            IsOnFire = false;
+            burntDown = true;
+            Destroy(this.gameObject);
+            currentBuildingPos.y = 0;
+            Instantiate(burntBuilding, currentBuildingPos, Quaternion.identity);
+            Player.reward -= GlobalComponents.damagesPaid;
+            if (Player.reward < 0)
             {
-                IsOnFire = false;
-                burntDown = true;
-                Destroy(this.gameObject);
-                Instantiate(burntBuilding, currentBuildingPos, Quaternion.identity);
-                Player.reward -= GlobalComponents.damagesPaid;
-                if(Player.reward < 0)
-                {
-                    Player.reward = 0;
-                }
+                Player.reward = 0;
+            }
         }
     }
 
@@ -94,7 +95,7 @@ public class Building : MonoBehaviour
                 buildingHealth = 100;
                 Player.reward += GlobalComponents.reward;
                 buildingRenderer.material.color = defaultColor;
-                foreach(var child in buildingRenderer.GetComponentsInChildren<Renderer>())
+                foreach (var child in buildingRenderer.GetComponentsInChildren<Renderer>())
                 {
                     child.material.color = Color.white;
                 }

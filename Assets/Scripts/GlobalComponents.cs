@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GlobalComponents : MonoBehaviour {
 
@@ -18,5 +19,10 @@ public class GlobalComponents : MonoBehaviour {
 	void Update () {
         moneyCount.text = Player.reward.ToString();
         truckCount.text = Player.fireTrucksOwned.ToString();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("MenuScene");
+        }
     }
 }
